@@ -1,5 +1,7 @@
 build*
 .cache/
+*.user
+compile_commands.json
 
 # Prerequisites
 *.d
