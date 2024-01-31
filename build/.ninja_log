@@ -1,0 +1,25 @@
+# ninja log v5
+2396	2620	1706721702554857284	BigNum_test[1]_tests.cmake	5c05d357968e7867
+1372	1396	1706721701326806045	libBigNum.a	a2d36846f897035a
+8782	8812	1706719863426742782	lib/libgmock.a	b1b79afc07571452
+1612	4312	1706719858922548116	_deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o	5a541ea8a6ff810c
+4	2396	1706721702318847436	CMakeFiles/BigNum_test.dir/tests/tests.cpp.o	123af0cd8ee295f8
+5	3587	1706719858194516653	_deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o	c0fd58c21c9c3df1
+1397	1507	1706721701438810719	BigNum_sandbox	4fa73606b30ae991
+2396	2620	1706721702554857284	/home/niten/dev/cpp-test/build/BigNum_test[1]_tests.cmake	5c05d357968e7867
+8783	8809	1706719863422742609	lib/libgtest_main.a	dc3dcf1fccd9cc00
+2396	2620	1706721702554857284	BigNum_test	5c05d357968e7867
+5	4370	1706719858970550191	_deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o	875aeaf4118d477a
+8748	8782	1706719863394741399	lib/libgtest.a	9964b03990f49881
+4	1372	1706721701298804877	CMakeFiles/BigNum.dir/src/BigNum.cpp.o	5cdbc93c9f4a6901
+1445	8748	1706719863306737595	_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o	f9eb26538d3b18a0
+8812	8836	1706719863450743819	lib/libgmock_main.a	b5ea3975bd4a01b
+4	906	1706721700834785516	CMakeFiles/BigNum_sandbox.dir/tests/sandbox.cpp.o	9cd343524a14ed0d
+4	1001	1706722167545076233	CMakeFiles/BigNum_sandbox.dir/tests/sandbox.cpp.o	9cd343524a14ed0d
+3	1533	1706722168073094015	CMakeFiles/BigNum.dir/src/BigNum.cpp.o	5cdbc93c9f4a6901
+1533	1557	1706722168105095093	libBigNum.a	a2d36846f897035a
+1557	1680	1706722168229099271	BigNum_sandbox	4fa73606b30ae991
+4	2479	1706722169021125951	CMakeFiles/BigNum_test.dir/tests/tests.cpp.o	123af0cd8ee295f8
+2479	2710	1706722169261134040	BigNum_test	5c05d357968e7867
+2479	2710	1706722169261134040	BigNum_test[1]_tests.cmake	5c05d357968e7867
+2479	2710	1706722169261134040	/home/niten/dev/cpp-test/build/BigNum_test[1]_tests.cmake	5c05d357968e7867
