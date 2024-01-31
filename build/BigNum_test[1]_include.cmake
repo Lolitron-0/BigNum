@@ -1,5 +1,0 @@
-if(EXISTS "/home/niten/dev/cpp-test/build/BigNum_test[1]_tests.cmake")
-  include("/home/niten/dev/cpp-test/build/BigNum_test[1]_tests.cmake")
-else()
-  add_test(BigNum_test_NOT_BUILT BigNum_test_NOT_BUILT)
-endif()
