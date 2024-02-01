@@ -32,9 +32,13 @@ void BigNum::initializePyTests()
 void BigNum::setPrecision(int64_t value)
 {
     if (value > 0)
+    {
         s_Precision = value;
+    }
     else
+    {
         throw InvalidInputException{};
+    }
 }
 
 int64_t BigNum::getPrecision() { return BigNum::s_Precision; }
@@ -104,7 +108,9 @@ void BigNum::_removeInsignificantZeroes()
 {
     while (this->m_Digits.size() > std::max(1L, this->m_Exponent) &&
            !this->m_Digits.back())
+    {
         this->m_Digits.pop_back();
+    }
 
     while (this->m_Digits.size() && !this->m_Digits.front())
     {
@@ -131,7 +137,9 @@ void BigNum::_shiftReprRight()
 BigNum BigNum::inverse() const
 {
     if (*this == 0)
+    {
         throw bignum::ZeroDivisionException{};
+    }
 
     BigNum copy{ *this };
     BigNum result;
@@ -146,7 +154,9 @@ BigNum BigNum::inverse() const
     }
 
     while (dividend < copy)
+    {
         dividend.m_Exponent++;
+    }
 
     result.m_Exponent -= dividend.m_Exponent - 1;
 
@@ -189,9 +199,13 @@ void BigNum::_commonExponent(BigNum& num1, BigNum& num2)
 void BigNum::_commonLength(BigNum& num1, BigNum& num2)
 {
     while (num1.m_Digits.size() < num2.m_Digits.size())
+    {
         num1.m_Digits.push_back(0);
+    }
     while (num2.m_Digits.size() < num1.m_Digits.size())
+    {
         num2.m_Digits.push_back(0);
+    }
 }
 
 BigNum BigNum::operator-() const
@@ -208,9 +222,13 @@ BigNum operator+(const BigNum& a, const BigNum& b)
     if (a.m_Negative)
     {
         if (b.m_Negative)
+        {
             return -(-a + (-b));
+        }
         else
+        {
             return b - (-a);
+        }
     }
     else if (b.m_Negative)
     {
@@ -240,11 +258,17 @@ BigNum operator+(const BigNum& a, const BigNum& b)
 BigNum operator-(const BigNum& a, const BigNum& b)
 {
     if (b.m_Negative)
+    {
         return a + (-b);
+    }
     else if (a.m_Negative)
+    {
         return -(-a + b);
+    }
     else if (a < b)
+    {
         return -(b - a);
+    }
 
     BigNum num1{ a };
     BigNum num2{ b };
@@ -351,7 +375,9 @@ BigNum operator/(const BigNum& a, const BigNum& b)
 BigNum::operator std::string() const
 {
     if (this->m_Digits.empty())
+    {
         return "0";
+    }
 
     std::string result;
     int32_t i{ 0 };
@@ -372,13 +398,19 @@ BigNum::operator std::string() const
     }
 
     while (i < exp)
+    {
         result += "0";
+    }
 
     if (this->m_Exponent < this->m_Digits.size() && this->m_Exponent > 0)
+    {
         result += ".";
+    }
 
     for (; i < this->m_Digits.size(); i++)
+    {
         result += '0' + this->m_Digits[i];
+    }
 
     return (m_Negative ? "-" : "") + result;
 }
@@ -386,23 +418,33 @@ BigNum::operator std::string() const
 int32_t operator<=>(const BigNum& a, const BigNum& b)
 {
     if (a.m_Negative != b.m_Negative)
+    {
         return a.m_Negative < b.m_Negative ? 1 : -1;
+    }
 
     if (a.m_Exponent != b.m_Exponent)
+    {
         return ((a.m_Exponent > b.m_Exponent) ^ (a.m_Negative) ? 1 : -1);
+    }
 
     BigNum aCp{ a };
     BigNum bCp{ b };
     while (aCp.m_Digits.size() > bCp.m_Digits.size())
+    {
         bCp.m_Digits.push_back(0);
+    }
 
     while (aCp.m_Digits.size() < bCp.m_Digits.size())
+    {
         aCp.m_Digits.push_back(0);
+    }
 
     for (int32_t i{ 0 }; i < aCp.m_Digits.size(); i++)
     {
         if (aCp[i] != bCp[i])
+        {
             return ((aCp[i] > bCp[i]) ^ (aCp.m_Negative) ? 1 : -1);
+        }
     }
     return 0;
 }
