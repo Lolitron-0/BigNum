@@ -1,9 +1,7 @@
 #include "BigNum/Assertions.hpp"
 #include <BigNum/BigNum.hpp>
-#include <compare>
 #include <cstdint>
 #include <cstdlib>
-#include <deque>
 #include <iostream>
 #include <python3.11/Python.h>
 #include <string>
@@ -19,16 +17,15 @@ void BigNum::initializePyTests()
 {
     Py_Initialize();
 
-    auto a =
-        bignum::BigNum{ "12345678910111213141516171819201234567891011"
-                        "1213141516171819201234"
-                        "567"
-                        "89101112131415161718192012345678910111213141"
-                        "51617181920" };
-    auto b = bignum::BigNum{ "2019181716151413121110987201918171615141"
-                             "31211109872019181716"
-                             "1514131"
-                             "211109872019181716151413121110987" };
+    bignum::BigNum a{ "12345678910111213141516171819201234567891011"
+                      "1213141516171819201234"
+                      "567"
+                      "89101112131415161718192012345678910111213141"
+                      "51617181920" };
+    bignum::BigNum b{ "2019181716151413121110987201918171615141"
+                      "31211109872019181716"
+                      "1514131"
+                      "211109872019181716151413121110987" };
     ASSERT_BN_OP(a, b, *);
 }
 
@@ -37,12 +34,10 @@ void BigNum::setPrecision(int64_t value)
     if (value > 0)
         s_Precision = value;
     else
-		throw InvalidInputException{};
+        throw InvalidInputException{};
 }
 
-int64_t BigNum::getPrecision() {
-	return BigNum::s_Precision;
-}
+int64_t BigNum::getPrecision() { return BigNum::s_Precision; }
 
 BigNum::BigNum(const std::string& numStr)
 {

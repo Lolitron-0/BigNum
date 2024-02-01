@@ -63,7 +63,10 @@ public:
     friend int32_t operator<=>(const BigNum&, const BigNum&);
     friend bool operator>(const BigNum&, const BigNum&) = default;
     friend bool operator<(const BigNum&, const BigNum&) = default;
+    friend bool operator<=(const BigNum&, const BigNum&) = default;
+    friend bool operator>=(const BigNum&, const BigNum&) = default;
     friend bool operator==(const BigNum&, const BigNum&) = default;
+    friend bool operator!=(const BigNum&, const BigNum&) = default;
     operator std::string() const;
 
     // Find inverse of the number
