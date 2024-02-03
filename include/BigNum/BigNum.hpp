@@ -25,7 +25,7 @@ class BigNum
     using DigitType = int64_t;
 
 public:
-    BigNum() = default;
+    BigNum();
 
     template <typename Number,
               typename std::enable_if<
@@ -46,9 +46,12 @@ public:
     static void initializePyTests();
 
     // Set pricision in digits
-    static void setPrecision(int64_t);
+    static void setMinimalPrecision(int64_t);
     // Retrieve precision in degits
-    static int64_t getPrecision();
+    static int64_t getMinimalPrecision();
+
+    // BigNum power
+    static BigNum pow(const BigNum&, const BigNum&);
 
 public:
     BigNum& operator=(const BigNum&) = default;
@@ -71,6 +74,8 @@ public:
 
     // Find inverse of the number
     BigNum inverse() const;
+	// Get factorial of big number
+    BigNum factorial() const;
 
 private:
     template <typename Iterator>
@@ -94,7 +99,7 @@ private:
     static constexpr int64_t s_Base{ 10 };
     static constexpr size_t s_MinKaratsubaSize{ 1 };
 
-    std::vector<DigitType> m_Digits{ 1, 0 };
+    std::vector<DigitType> m_Digits;
     bool m_Negative{ false };
     int64_t m_Exponent{ 1 };
 };

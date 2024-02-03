@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
+set(CMAKE_CXX_FLAGS_RELEASE_INIT "-O3")
 # add_compile_options(-fsanitize=undefined,address)
 # add_link_options(-fsanitize=undefined,address)
 
@@ -34,13 +34,13 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Python::Python)
 
-add_executable(${PROJECT_NAME}_sandbox tests/sandbox.cpp)
-target_link_libraries(${PROJECT_NAME}_sandbox PRIVATE ${PROJECT_NAME})
+add_executable(${PROJECT_NAME}_pi tests/pi_eval.cpp)
+target_link_libraries(${PROJECT_NAME}_pi PRIVATE ${PROJECT_NAME})
+target_include_directories(${PROJECT_NAME}_pi PRIVATE include)
 
 # Tests
 add_executable(${PROJECT_NAME}_test tests/tests.cpp)
 target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME})
-target_include_directories(${PROJECT_NAME}_sandbox PRIVATE include)
 
 target_link_libraries(
 	${PROJECT_NAME}_test

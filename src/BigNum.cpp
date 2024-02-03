@@ -29,7 +29,7 @@ void BigNum::initializePyTests()
     ASSERT_BN_OP(a, b, *);
 }
 
-void BigNum::setPrecision(int64_t value)
+void BigNum::setMinimalPrecision(int64_t value)
 {
     if (value > 0)
     {
@@ -41,7 +41,19 @@ void BigNum::setPrecision(int64_t value)
     }
 }
 
-int64_t BigNum::getPrecision() { return BigNum::s_Precision; }
+int64_t BigNum::getMinimalPrecision() { return BigNum::s_Precision; }
+
+BigNum::BigNum() : m_Digits(1, 0) {}
+
+BigNum BigNum::pow(const BigNum& base, const BigNum& power)
+{
+    BigNum result{ 1 };
+    for (BigNum i{ 0 }; i < power; i = i + 1)
+    {
+        result = result * base;
+    }
+    return result;
+}
 
 BigNum::BigNum(const std::string& numStr)
 {
@@ -134,6 +146,16 @@ void BigNum::_shiftReprRight()
     }
 }
 
+BigNum BigNum::factorial() const
+{
+    BigNum result{ 1 };
+    for (BigNum i{ 2 }; i <= *this; i = i + 1)
+    {
+        result = result * i;
+    }
+    return result;
+}
+
 BigNum BigNum::inverse() const
 {
     if (*this == 0)
@@ -145,6 +167,7 @@ BigNum BigNum::inverse() const
     BigNum result;
     result.m_Exponent = 1;
     result.m_Negative = this->m_Negative;
+    result.m_Digits = {};
     BigNum dividend{ 1 };
 
     while (copy < 1)
@@ -369,7 +392,11 @@ BigNum operator*(const BigNum& a, const BigNum& b)
 BigNum operator/(const BigNum& a, const BigNum& b)
 {
     auto inv{ b.inverse() };
-    return a * inv;
+    auto result{ a * inv };
+    result.m_Digits.resize(
+        std::min(static_cast<int64_t>(result.m_Digits.size()),
+                 (result.m_Exponent > 0 ? result.m_Exponent : 0) + BigNum::s_Precision));
+    return result;
 }
 
 BigNum::operator std::string() const
