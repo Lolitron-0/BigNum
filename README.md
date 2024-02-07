@@ -21,7 +21,7 @@ int main()
     std::cout << numFromString.inverse();
 
     // 1000 digit precision (default 100)
-    bignum::BigNum::setPrecision(1000);
+    bignum::BigNum::setMinimalPrecision(1000);
     auto a{ -322.322_BN };
     bignum::BigNum b{ 121.21 };
     std::cout << a + b << std::endl;
