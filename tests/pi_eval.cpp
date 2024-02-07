@@ -63,7 +63,8 @@ int main(int argc, char** argv)
         "74421329"
     };
     auto start{ std::chrono::high_resolution_clock::now() };
-    auto [P1n, Q1n, R1n]{ binarySplit(1, 80) };
+    auto [P1n, Q1n, R1n]{ binarySplit(
+        1, std::max(80ll, bignum::BigNum::getMinimalPrecision() / 10ll)) };
     auto pi{ (koeff * Q1n) / (13591409 * Q1n + R1n) };
     auto stop{ std::chrono::high_resolution_clock::now() };
     auto duration{ std::chrono::duration_cast<std::chrono::milliseconds>(
