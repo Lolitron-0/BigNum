@@ -164,6 +164,7 @@ BigNum BigNum::inverse() const
     }
 
     BigNum copy{ *this };
+    copy.m_Negative = false;
     BigNum result;
     result.m_Exponent = 1;
     result.m_Negative = this->m_Negative;
