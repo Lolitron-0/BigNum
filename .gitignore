@@ -2,6 +2,7 @@ build*
 .cache/
 *.user
 compile_commands.json
+src/dump.cpp
 
 # Prerequisites
 *.d
