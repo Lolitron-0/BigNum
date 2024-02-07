@@ -185,7 +185,7 @@ BigNum BigNum::inverse() const
 
     int64_t currentDigitsEvald{ 0 };
     int64_t totalDigits{ std::max(0L, result.m_Exponent) +
-                         BigNum::s_Precision };
+                         BigNum::s_Precision + 2 }; // for rounding
     BigNum::DigitType digit;
     do
     {
@@ -393,9 +393,10 @@ BigNum operator/(const BigNum& a, const BigNum& b)
 {
     auto inv{ b.inverse() };
     auto result{ a * inv };
-    result.m_Digits.resize(
-        std::min(static_cast<int64_t>(result.m_Digits.size()),
-                 (result.m_Exponent > 0 ? result.m_Exponent : 0) + BigNum::s_Precision));
+    auto leaveDigits{ (result.m_Exponent > 0 ? result.m_Exponent : 0) +
+                      BigNum::s_Precision };
+    result.m_Digits.resize(std::min(
+        static_cast<int64_t>(result.m_Digits.size()), leaveDigits));
     return result;
 }
 

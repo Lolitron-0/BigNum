@@ -29,9 +29,16 @@ binarySplit(int32_t a, int32_t b)
     return std::make_tuple(Pab, Qab, Rab);
 }
 
-int main()
+int main(int argc, char** argv)
 {
-    bignum::BigNum::setMinimalPrecision(1002);
+    if (argc > 1)
+    {
+        bignum::BigNum::setMinimalPrecision(atoi(argv[1]));
+    }
+    else
+    {
+        bignum::BigNum::setMinimalPrecision(1002);
+    }
     bignum::BigNum koeff{
         "42698670."
         "6663333958177128891606596082733208840025090828008380071788526051"
@@ -61,6 +68,7 @@ int main()
     auto stop{ std::chrono::high_resolution_clock::now() };
     auto duration{ std::chrono::duration_cast<std::chrono::milliseconds>(
         stop - start) };
+    std::cout << "Your pi: \n" << pi << std::endl;
     std::cout << "Took " << duration.count() << " milliseconds"
               << std::endl;
     auto piStr{ (std::string)pi };
