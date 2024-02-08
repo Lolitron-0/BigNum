@@ -34,6 +34,8 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Python::Python)
 
+configure_file(tests/pi_string pi_string COPYONLY)
+
 add_executable(${PROJECT_NAME}_pi tests/pi_eval.cpp)
 target_link_libraries(${PROJECT_NAME}_pi PRIVATE ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME}_pi PRIVATE include)
