@@ -180,6 +180,12 @@ TEST(General, ToString_Zero)
     EXPECT_EQ((std::string) bignum::BigNum{-0}, "0");
 }
 
+TEST(General, ToString_SmallExp)
+{
+    EXPECT_EQ((std::string) bignum::BigNum{"0.000001"}, "0.000001");
+}
+
+
 TEST(General, Cout)
 {
     EXPECT_NO_THROW(std::cout << bignum::BigNum{-123});
