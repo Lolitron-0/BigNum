@@ -9,12 +9,9 @@ namespace bignum
 
 #define BN_CLAMP_TO_ZERO(a) ((a) < 0 ? 0 : (a))
 
-uint64_t BigNum::s_Precision{100};
+uint64_t BigNum::s_Precision{ 100 };
 
-void BigNum::setMinimalPrecision(uint64_t value)
-{
-    s_Precision = value;
-}
+void BigNum::setMinimalPrecision(uint64_t value) { s_Precision = value; }
 
 int64_t BigNum::getMinimalPrecision() { return BigNum::s_Precision; }
 
@@ -57,18 +54,6 @@ BigNum::BigNum(const std::string& numStr)
 
     this->_removeInsignificantZeroes();
 }
-
-// BigNum::BigNum(const BigNum& other)
-//     : m_Exponent{ other.m_Exponent }, m_Negative{ other.m_Negative },
-//       m_Digits{ other.m_Digits }
-// {
-// }
-
-// BigNum::BigNum(BigNum&& other) : m_Digits{ std::move(other.m_Digits) }
-// {
-//     std::swap(this->m_Exponent, other.m_Exponent);
-//     std::swap(this->m_Negative, other.m_Negative);
-// }
 
 void BigNum::_normalize()
 {
@@ -144,8 +129,9 @@ BigNum BigNum::inverse() const
 
     result.m_Exponent -= dividend.m_Exponent - 1;
 
-    uint64_t currentDigitsEvald{0};
-    uint64_t totalDigits{std::max(0L, result.m_Exponent) + BigNum::s_Precision + 2}; // for rounding
+    uint64_t currentDigitsEvald{ 0 };
+    uint64_t totalDigits{ std::max(0L, result.m_Exponent) +
+                          BigNum::s_Precision + 2 }; // for rounding
     BigNum::DigitType digit;
     do
     {
@@ -278,69 +264,12 @@ BigNum operator*(const BigNum& a, const BigNum& b)
     BigNum result;
     result.m_Digits.resize(a.m_Digits.size() + b.m_Digits.size());
 
-    // TODO: fast multiplication not implemented
-    if (1 || std::min(a.m_Digits.size(), b.m_Digits.size()) <=
-                 BigNum::s_MinKaratsubaSize)
+    for (int32_t i{ 0 }; i < a.m_Digits.size(); i++)
     {
-        for (int32_t i{ 0 }; i < a.m_Digits.size(); i++)
+        for (int32_t j{ 0 }; j < b.m_Digits.size(); j++)
         {
-            for (int32_t j{ 0 }; j < b.m_Digits.size(); j++)
-            {
-                result[i + j + 1] += a[i] * b[j];
-            }
+            result[i + j + 1] += a[i] * b[j];
         }
-    }
-    else
-    {
-        BigNum aPart1{ a.m_Digits.begin(),
-                       a.m_Digits.begin() + (a.m_Digits.size() + 1) / 2 };
-        BigNum aPart2{ a.m_Digits.begin() + aPart1.m_Digits.size(),
-                       a.m_Digits.end() };
-
-        BigNum bPart1{ b.m_Digits.begin(),
-                       b.m_Digits.begin() + (b.m_Digits.size() + 1) / 2 };
-        BigNum bPart2{ b.m_Digits.begin() + bPart1.m_Digits.size(),
-                       b.m_Digits.end() };
-
-        BigNum aPartsSum{ aPart1 + aPart2 };
-        // ASSERT_BN_OP(aPart1, aPart2, +);
-        BigNum bPartsSum{ bPart1 + bPart2 };
-        // ASSERT_BN_OP(bPart1, bPart2, +);
-        BigNum productOfPartSums{ aPartsSum * bPartsSum };
-        // ASSERT_BN_OP(aPartsSum, bPartsSum, *);
-
-        BigNum productOfFirstParts{ aPart1 * bPart1 };
-        // ASSERT_BN_OP(aPart1, bPart1, *);
-        BigNum productOfSecondParts{ aPart2 * bPart2 };
-        // ASSERT_BN_OP(aPart2, bPart2, *);
-        std::vector<BigNum::DigitType> sumOfMiddleTerms{
-            productOfPartSums.m_Digits
-        };
-        for (int32_t i{ 0 }; i < productOfFirstParts.m_Digits.size(); i++)
-        {
-            sumOfMiddleTerms[i] -= productOfFirstParts[i];
-        }
-        for (int32_t i{ 0 }; i < productOfSecondParts.m_Digits.size();
-             i++)
-        {
-            sumOfMiddleTerms[i] -= productOfSecondParts[i];
-        }
-        // BigNum sumOfMiddleTerms{productOfPartSums - productOfFirstParts
-        // - productOfSecondParts};
-        for (int32_t i{ 0 }; i < productOfFirstParts.m_Digits.size(); i++)
-        {
-            result[i] = productOfFirstParts[i];
-        }
-        for (int32_t i{ 0 }; i < productOfSecondParts.m_Digits.size();
-             i++)
-        {
-            result[i + productOfFirstParts.m_Digits.size()] =
-                productOfSecondParts[i];
-        }
-        // for (int32_t i{0}; i < sumOfMiddleTerms.size(); i++)
-        // {
-        //     result[i + aPart1.m_Digits.size()] += sumOfMiddleTerms[i];
-        // }
     }
     result.m_Exponent = a.m_Exponent + b.m_Exponent;
     result.m_Negative = a.m_Negative != b.m_Negative;
@@ -402,7 +331,7 @@ BigNum::operator std::string() const
     return (m_Negative ? "-" : "") + result;
 }
 
-std::strong_ordering operator<=>(const BigNum &a, const BigNum &b)
+std::strong_ordering operator<=>(const BigNum& a, const BigNum& b)
 {
     using namespace bignum::literals;
 
@@ -419,8 +348,9 @@ std::strong_ordering operator<=>(const BigNum &a, const BigNum &b)
 
     if (a.m_Exponent != b.m_Exponent)
     {
-        return ((a.m_Exponent > b.m_Exponent) ^ (a.m_Negative) ? std::strong_ordering::greater
-                                                               : std::strong_ordering::less);
+        return ((a.m_Exponent > b.m_Exponent) ^ (a.m_Negative)
+                    ? std::strong_ordering::greater
+                    : std::strong_ordering::less);
     }
 
     BigNum aCp{ a };
@@ -439,8 +369,9 @@ std::strong_ordering operator<=>(const BigNum &a, const BigNum &b)
     {
         if (aCp[i] != bCp[i])
         {
-            return ((aCp[i] > bCp[i]) ^ (aCp.m_Negative) ? std::strong_ordering::greater
-                                                         : std::strong_ordering::less);
+            return ((aCp[i] > bCp[i]) ^ (aCp.m_Negative)
+                        ? std::strong_ordering::greater
+                        : std::strong_ordering::less);
         }
     }
     return std::strong_ordering::equal;
@@ -466,12 +397,12 @@ const char* ZeroDivisionException::what() const noexcept
     return "Division by zero!";
 }
 
-bool operator==(const BigNum &a, const BigNum &b)
+bool operator==(const BigNum& a, const BigNum& b)
 {
     return (a <=> b) == 0;
 }
 
-bool operator!=(const BigNum &a, const BigNum &b)
+bool operator!=(const BigNum& a, const BigNum& b)
 {
     return (a <=> b) != 0;
 }

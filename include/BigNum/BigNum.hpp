@@ -78,7 +78,6 @@ private:
 private:
     static uint64_t s_Precision;
     static constexpr int64_t s_Base{ 10 };
-    static constexpr size_t s_MinKaratsubaSize{ 1 };
 
     std::vector<DigitType> m_Digits;
     bool m_Negative{ false };
