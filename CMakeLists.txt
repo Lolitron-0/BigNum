@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_FLAGS_RELEASE_INIT "-O3")
+set(CMAKE_CXX_FLAGS --coverage)
 # add_compile_options(-fsanitize=undefined,address)
 # add_link_options(-fsanitize=undefined,address)
 
@@ -23,16 +24,12 @@ set(SOURCES
 
 enable_testing()
 
-find_package(Python REQUIRED Development)
-
 include_directories(include)
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE 
 	PROJECT_NAME=${PROJECT_NAME}
 	#TEST_BN_OPS
 )
-
-target_link_libraries(${PROJECT_NAME} PRIVATE Python::Python)
 
 configure_file(tests/pi_string pi_string COPYONLY)
 

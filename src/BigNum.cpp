@@ -1,9 +1,7 @@
-#include "BigNum/Assertions.hpp"
 #include <BigNum/BigNum.hpp>
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
-#include <python3.11/Python.h>
 #include <string>
 
 namespace bignum
@@ -11,34 +9,11 @@ namespace bignum
 
 #define BN_CLAMP_TO_ZERO(a) ((a) < 0 ? 0 : (a))
 
-int64_t BigNum::s_Precision{ 100 };
+uint64_t BigNum::s_Precision{100};
 
-void BigNum::initializePyTests()
+void BigNum::setMinimalPrecision(uint64_t value)
 {
-    Py_Initialize();
-
-    bignum::BigNum a{ "12345678910111213141516171819201234567891011"
-                      "1213141516171819201234"
-                      "567"
-                      "89101112131415161718192012345678910111213141"
-                      "51617181920" };
-    bignum::BigNum b{ "2019181716151413121110987201918171615141"
-                      "31211109872019181716"
-                      "1514131"
-                      "211109872019181716151413121110987" };
-    ASSERT_BN_OP(a, b, *);
-}
-
-void BigNum::setMinimalPrecision(int64_t value)
-{
-    if (value > 0)
-    {
-        s_Precision = value;
-    }
-    else
-    {
-        throw InvalidInputException{};
-    }
+    s_Precision = value;
 }
 
 int64_t BigNum::getMinimalPrecision() { return BigNum::s_Precision; }
@@ -83,17 +58,17 @@ BigNum::BigNum(const std::string& numStr)
     this->_removeInsignificantZeroes();
 }
 
-BigNum::BigNum(const BigNum& other)
-    : m_Exponent{ other.m_Exponent }, m_Negative{ other.m_Negative },
-      m_Digits{ other.m_Digits }
-{
-}
+// BigNum::BigNum(const BigNum& other)
+//     : m_Exponent{ other.m_Exponent }, m_Negative{ other.m_Negative },
+//       m_Digits{ other.m_Digits }
+// {
+// }
 
-BigNum::BigNum(BigNum&& other) : m_Digits{ std::move(other.m_Digits) }
-{
-    std::swap(this->m_Exponent, other.m_Exponent);
-    std::swap(this->m_Negative, other.m_Negative);
-}
+// BigNum::BigNum(BigNum&& other) : m_Digits{ std::move(other.m_Digits) }
+// {
+//     std::swap(this->m_Exponent, other.m_Exponent);
+//     std::swap(this->m_Negative, other.m_Negative);
+// }
 
 void BigNum::_normalize()
 {
@@ -128,21 +103,6 @@ void BigNum::_removeInsignificantZeroes()
     {
         this->m_Digits.erase(this->m_Digits.begin());
         this->m_Exponent--;
-    }
-}
-
-void BigNum::_shiftReprRight()
-{
-    if (this->m_Digits.empty())
-    {
-        this->m_Digits.push_back(0);
-        return;
-    }
-    this->m_Digits.push_back(this->m_Digits.back());
-    for (int32_t i{ static_cast<int32_t>(this->m_Digits.size()) - 2 };
-         i > 0; i--)
-    {
-        this->m_Digits[i] = this->m_Digits[i - 1];
     }
 }
 
@@ -184,9 +144,8 @@ BigNum BigNum::inverse() const
 
     result.m_Exponent -= dividend.m_Exponent - 1;
 
-    int64_t currentDigitsEvald{ 0 };
-    int64_t totalDigits{ std::max(0L, result.m_Exponent) +
-                         BigNum::s_Precision + 2 }; // for rounding
+    uint64_t currentDigitsEvald{0};
+    uint64_t totalDigits{std::max(0L, result.m_Exponent) + BigNum::s_Precision + 2}; // for rounding
     BigNum::DigitType digit;
     do
     {
@@ -396,8 +355,7 @@ BigNum operator/(const BigNum& a, const BigNum& b)
     auto result{ a * inv };
     auto leaveDigits{ (result.m_Exponent > 0 ? result.m_Exponent : 0) +
                       BigNum::s_Precision };
-    result.m_Digits.resize(std::min(
-        static_cast<int64_t>(result.m_Digits.size()), leaveDigits));
+    result.m_Digits.resize(std::min(result.m_Digits.size(), leaveDigits));
     return result;
 }
 
@@ -444,16 +402,25 @@ BigNum::operator std::string() const
     return (m_Negative ? "-" : "") + result;
 }
 
-int32_t operator<=>(const BigNum& a, const BigNum& b)
+std::strong_ordering operator<=>(const BigNum &a, const BigNum &b)
 {
+    using namespace bignum::literals;
+
+    if (a.m_Digits.empty() && b.m_Digits.empty())
+    {
+        return std::strong_ordering::equal;
+    }
+
     if (a.m_Negative != b.m_Negative)
     {
-        return a.m_Negative < b.m_Negative ? 1 : -1;
+        return a.m_Negative < b.m_Negative ? std::strong_ordering::greater
+                                           : std::strong_ordering::less;
     }
 
     if (a.m_Exponent != b.m_Exponent)
     {
-        return ((a.m_Exponent > b.m_Exponent) ^ (a.m_Negative) ? 1 : -1);
+        return ((a.m_Exponent > b.m_Exponent) ^ (a.m_Negative) ? std::strong_ordering::greater
+                                                               : std::strong_ordering::less);
     }
 
     BigNum aCp{ a };
@@ -472,10 +439,11 @@ int32_t operator<=>(const BigNum& a, const BigNum& b)
     {
         if (aCp[i] != bCp[i])
         {
-            return ((aCp[i] > bCp[i]) ^ (aCp.m_Negative) ? 1 : -1);
+            return ((aCp[i] > bCp[i]) ^ (aCp.m_Negative) ? std::strong_ordering::greater
+                                                         : std::strong_ordering::less);
         }
     }
-    return 0;
+    return std::strong_ordering::equal;
 }
 
 constexpr const BigNum::DigitType& BigNum::operator[](int32_t i) const
@@ -498,9 +466,14 @@ const char* ZeroDivisionException::what() const noexcept
     return "Division by zero!";
 }
 
-const char* InvalidInputException::what() const noexcept
+bool operator==(const BigNum &a, const BigNum &b)
 {
-    return "Invalid input!";
+    return (a <=> b) == 0;
+}
+
+bool operator!=(const BigNum &a, const BigNum &b)
+{
+    return (a <=> b) != 0;
 }
 
 } // namespace bignum

@@ -14,12 +14,6 @@ public:
     const char* what() const noexcept override;
 };
 
-class InvalidInputException : public std::exception
-{
-public:
-    const char* what() const noexcept override;
-};
-
 class BigNum
 {
     using DigitType = int64_t;
@@ -37,16 +31,8 @@ public:
 
     BigNum(const std::string&);
 
-    ~BigNum() = default;
-
-    BigNum(const BigNum&);
-    BigNum(BigNum&&);
-
-    // development only function
-    static void initializePyTests();
-
     // Set pricision in digits
-    static void setMinimalPrecision(int64_t);
+    static void setMinimalPrecision(uint64_t);
     // Retrieve precision in degits
     static int64_t getMinimalPrecision();
 
@@ -54,8 +40,8 @@ public:
     static BigNum pow(const BigNum&, const BigNum&);
 
 public:
-    BigNum& operator=(const BigNum&) = default;
-    BigNum& operator=(BigNum&&) = default;
+    // BigNum& operator=(const BigNum&) = default;
+    // BigNum& operator=(BigNum&&) = default;
     BigNum operator-() const;
 
     friend BigNum& operator-=(BigNum&, const BigNum&);
@@ -63,13 +49,9 @@ public:
     friend BigNum operator-(const BigNum&, const BigNum&);
     friend BigNum operator*(const BigNum&, const BigNum&);
     friend BigNum operator/(const BigNum&, const BigNum&);
-    friend int32_t operator<=>(const BigNum&, const BigNum&);
-    friend bool operator>(const BigNum&, const BigNum&) = default;
-    friend bool operator<(const BigNum&, const BigNum&) = default;
-    friend bool operator<=(const BigNum&, const BigNum&) = default;
-    friend bool operator>=(const BigNum&, const BigNum&) = default;
-    friend bool operator==(const BigNum&, const BigNum&) = default;
-    friend bool operator!=(const BigNum&, const BigNum&) = default;
+
+    friend std::strong_ordering operator<=>(const BigNum &, const BigNum &);
+    friend bool operator==(const BigNum &, const BigNum &);
     operator std::string() const;
 
     // Find inverse of the number
@@ -88,14 +70,13 @@ private:
     static void _commonLength(BigNum&, BigNum&);
 
     void _removeInsignificantZeroes();
-    void _shiftReprRight();
     void _normalize();
 
     constexpr const DigitType& operator[](int32_t i) const;
     constexpr DigitType& operator[](int32_t i);
 
 private:
-    static int64_t s_Precision;
+    static uint64_t s_Precision;
     static constexpr int64_t s_Base{ 10 };
     static constexpr size_t s_MinKaratsubaSize{ 1 };
 
@@ -106,13 +87,16 @@ private:
 
 std::ostream& operator<<(std::ostream&, const BigNum&);
 
-int32_t operator<=>(const BigNum&, const BigNum&);
+std::strong_ordering operator<=>(const BigNum &, const BigNum &);
 
 BigNum operator+(const BigNum&, const BigNum&);
 BigNum operator-(const BigNum&, const BigNum&);
 BigNum operator*(const BigNum&, const BigNum&);
 BigNum operator/(const BigNum&, const BigNum&);
 BigNum& operator-=(BigNum&, const BigNum&);
+
+bool operator==(const BigNum &, const BigNum &);
+bool operator!=(const BigNum &, const BigNum &);
 
 namespace literals
 {

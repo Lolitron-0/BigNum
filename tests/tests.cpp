@@ -18,6 +18,12 @@ TEST(Operations, Division)
             "4106819551768882935118580178634347498945" });
 }
 
+TEST(Operations, DivisionZero)
+{
+    bignum::BigNum::setMinimalPrecision(100);
+    EXPECT_THROW("1"_BN / "0"_BN, bignum::ZeroDivisionException);
+}
+
 TEST(Operations, Inverse)
 {
     bignum::BigNum::setMinimalPrecision(100);
@@ -66,7 +72,7 @@ TEST(Operations, Multiplication_decimal)
             "360429537726369278920725477508489755040" });
 }
 
-TEST(Operations, Sum)
+TEST(Operations, Sum_Positive)
 {
     bignum::BigNum::setMinimalPrecision(100);
     EXPECT_EQ(
@@ -80,7 +86,22 @@ TEST(Operations, Sum)
                         "691220416284042424242425138617181920" });
 }
 
-TEST(Operations, Difference)
+TEST(Operations, Sum_Negative)
+{
+    EXPECT_EQ("-21.5"_BN + -"24.5"_BN, "-46"_BN);
+}
+
+TEST(Operations, Sum_PositiveNegative)
+{
+    EXPECT_EQ("21.5"_BN + "-24.5"_BN, "-3"_BN);
+}
+
+TEST(Operations, Sum_DigitAdd)
+{
+    EXPECT_EQ("0.99999999"_BN + "0.00000001"_BN, 1_BN);
+}
+
+TEST(Operations, Difference_Positive)
 {
     bignum::BigNum::setMinimalPrecision(100);
     EXPECT_EQ(
@@ -92,6 +113,82 @@ TEST(Operations, Difference)
         bignum::BigNum{ "-0."
                         "100806040199979593919086374512907050300989694938"
                         "05281794714826040199979683538281808" });
+}
+
+TEST(Operations, Difference_PositiveNegative)
+{
+    EXPECT_EQ("20.001"_BN - "-1.1"_BN, "21.101"_BN);
+}
+
+TEST(Operations, Pow)
+{
+    EXPECT_EQ(bignum::BigNum::pow("2.5"_BN, 4_BN), "39.0625"_BN);
+}
+
+TEST(Operations, Factorial)
+{
+    EXPECT_EQ("12"_BN.factorial(), "479001600"_BN);
+}
+
+TEST(Comparison, LT)
+{
+	EXPECT_LT(2934992.000344_BN, 100000000000_BN);
+}
+
+TEST(Comparison, LE_Equal)
+{
+	EXPECT_LE(1_BN, 1_BN);
+}
+
+TEST(Comparison, LE_Less)
+{
+	EXPECT_LE(1_BN, "1.000000000001"_BN);
+}
+
+TEST(Comparison, GT)
+{
+	EXPECT_GT(100_BN, "0.00000000001"_BN);
+}
+
+TEST(Comparison, EQ)
+{
+    EXPECT_EQ(bignum::BigNum{"123.00000123"}, "123.00000123"_BN);
+}
+
+TEST(Comparison, EQ_Substract)
+{
+    EXPECT_EQ("1.001"_BN - "0"_BN, "1.001"_BN);
+}
+
+TEST(Comparison, EQ_Zero)
+{
+    EXPECT_EQ(bignum::BigNum{"-0"}, "0"_BN);
+}
+
+TEST(Comparison, NE)
+{
+    EXPECT_NE(bignum::BigNum{"-1.1"}, "1.1"_BN);
+}
+
+TEST(General, ToString)
+{
+    EXPECT_EQ((std::string) bignum::BigNum{-123}, "-123");
+}
+
+TEST(General, ToString_Zero)
+{
+    EXPECT_EQ((std::string) bignum::BigNum{-0}, "0");
+}
+
+TEST(General, Cout)
+{
+    EXPECT_NO_THROW(std::cout << bignum::BigNum{-123});
+}
+
+TEST(General, GetPrecision)
+{
+    bignum::BigNum::setMinimalPrecision(125);
+    EXPECT_EQ(bignum::BigNum::getMinimalPrecision(), 125);
 }
 
 TEST(General, DemoCase)
