@@ -3,6 +3,8 @@ build*
 *.user
 compile_commands.json
 src/dump.cpp
+include/BigNum/trololo.hpp
+
 
 # Prerequisites
 *.d
