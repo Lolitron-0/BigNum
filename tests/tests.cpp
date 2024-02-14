@@ -24,6 +24,12 @@ TEST(Operations, DivisionZero)
     EXPECT_THROW("1"_BN / "0"_BN, bignum::ZeroDivisionException);
 }
 
+TEST(Operations, Division_Whole)
+{
+    bignum::BigNum::setMinimalPrecision(100);
+    EXPECT_EQ("2"_BN / "0.5"_BN, "4"_BN);
+}
+
 TEST(Operations, Inverse)
 {
     bignum::BigNum::setMinimalPrecision(100);
@@ -130,29 +136,17 @@ TEST(Operations, Factorial)
     EXPECT_EQ("12"_BN.factorial(), "479001600"_BN);
 }
 
-TEST(Comparison, LT)
-{
-	EXPECT_LT(2934992.000344_BN, 100000000000_BN);
-}
+TEST(Comparison, LT) { EXPECT_LT(2934992.000344_BN, 100000000000_BN); }
 
-TEST(Comparison, LE_Equal)
-{
-	EXPECT_LE(1_BN, 1_BN);
-}
+TEST(Comparison, LE_Equal) { EXPECT_LE(1_BN, 1_BN); }
 
-TEST(Comparison, LE_Less)
-{
-	EXPECT_LE(1_BN, "1.000000000001"_BN);
-}
+TEST(Comparison, LE_Less) { EXPECT_LE(1_BN, "1.000000000001"_BN); }
 
-TEST(Comparison, GT)
-{
-	EXPECT_GT(100_BN, "0.00000000001"_BN);
-}
+TEST(Comparison, GT) { EXPECT_GT(100_BN, "0.00000000001"_BN); }
 
 TEST(Comparison, EQ)
 {
-    EXPECT_EQ(bignum::BigNum{"123.00000123"}, "123.00000123"_BN);
+    EXPECT_EQ(bignum::BigNum{ "123.00000123" }, "123.00000123"_BN);
 }
 
 TEST(Comparison, EQ_Substract)
@@ -160,35 +154,28 @@ TEST(Comparison, EQ_Substract)
     EXPECT_EQ("1.001"_BN - "0"_BN, "1.001"_BN);
 }
 
-TEST(Comparison, EQ_Zero)
-{
-    EXPECT_EQ(bignum::BigNum{"-0"}, "0"_BN);
-}
+TEST(Comparison, EQ_Zero) { EXPECT_EQ(bignum::BigNum{ "-0" }, "0"_BN); }
 
-TEST(Comparison, NE)
-{
-    EXPECT_NE(bignum::BigNum{"-1.1"}, "1.1"_BN);
-}
+TEST(Comparison, NE) { EXPECT_NE(bignum::BigNum{ "-1.1" }, "1.1"_BN); }
 
 TEST(General, ToString)
 {
-    EXPECT_EQ((std::string) bignum::BigNum{-123}, "-123");
+    EXPECT_EQ((std::string)bignum::BigNum{ -123 }, "-123");
 }
 
 TEST(General, ToString_Zero)
 {
-    EXPECT_EQ((std::string) bignum::BigNum{-0}, "0");
+    EXPECT_EQ((std::string)bignum::BigNum{ -0 }, "0");
 }
 
 TEST(General, ToString_SmallExp)
 {
-    EXPECT_EQ((std::string) bignum::BigNum{"0.000001"}, "0.000001");
+    EXPECT_EQ((std::string)bignum::BigNum{ "0.000001" }, "0.000001");
 }
-
 
 TEST(General, Cout)
 {
-    EXPECT_NO_THROW(std::cout << bignum::BigNum{-123});
+    EXPECT_NO_THROW(std::cout << bignum::BigNum{ -123 });
 }
 
 TEST(General, GetPrecision)
