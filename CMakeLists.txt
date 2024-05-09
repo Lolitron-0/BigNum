@@ -24,8 +24,8 @@ set(SOURCES
 
 enable_testing()
 
-include_directories(include)
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_compile_definitions(${PROJECT_NAME} PRIVATE 
 	PROJECT_NAME=${PROJECT_NAME}
 	#TEST_BN_OPS
